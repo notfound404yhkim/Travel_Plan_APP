@@ -51,12 +51,12 @@ import retrofit2.Retrofit;
 
 public class ScheduleAddActivity extends AppCompatActivity {
 
-    String[] region = {"서울","인천","대전","대구","광주","부산","제주"};
+    String[] region = {"서울", "인천", "대전", "대구", "광주", "부산", "제주"};
     ListView listRegion; //지역 리스트 뷰
-    TextView txtRegion,txtDate,txtPlace;
+    TextView txtRegion, txtDate, txtPlace;
     EditText editContent;
     RelativeLayout RegionLayout; //지역 선택부분 레이아웃
-    RelativeLayout DateLayout,PlaceLayout;
+    RelativeLayout DateLayout, PlaceLayout;
     LinearLayout bottomLayout;
     String dateString1 = null;
     String dateString2 = null;
@@ -64,7 +64,7 @@ public class ScheduleAddActivity extends AppCompatActivity {
     Button btnSave;
     String token;
 
-
+    String selectRegionId;
 
 
     @Override
@@ -90,7 +90,6 @@ public class ScheduleAddActivity extends AppCompatActivity {
         listRegion.setAdapter(adapter);
 
 
-
         RegionLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -100,7 +99,7 @@ public class ScheduleAddActivity extends AppCompatActivity {
         });
         listRegion.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> arg0,View arg1, int arg2, long arg3) {
+            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
                 txtRegion.setText(region[arg2]); //선택한지역값은 arg2에있음.
                 listRegion.setVisibility(View.GONE);
                 bottomLayout.setVisibility(View.VISIBLE);
@@ -139,16 +138,17 @@ public class ScheduleAddActivity extends AppCompatActivity {
         PlaceLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ScheduleAddActivity.this,ScheduleMapSelectActivity.class);
+                Intent intent = new Intent(ScheduleAddActivity.this, ScheduleMapSelectActivity.class);
 
                 String region = txtRegion.getText().toString().trim();
                 //지역이 선택되어야지 장소 선택가능
                 if (region.isEmpty()) {
-                    Toast.makeText(ScheduleAddActivity.this,"여행을 떠날 지역을 선택하세요 ",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ScheduleAddActivity.this, "여행을 떠날 지역을 선택하세요 ", Toast.LENGTH_SHORT).show();
                     return;
+                }
+                intent.putExtra("region", region);
+                launcher.launch(intent);
             }
-                intent.putExtra("region",region);
-                launcher.launch(intent);}
         });
 
         //일정 저장 이벤트
@@ -160,13 +160,13 @@ public class ScheduleAddActivity extends AppCompatActivity {
                 String date = txtDate.getText().toString().trim();
                 String place = txtPlace.getText().toString().trim();
                 String content = editContent.getText().toString().trim();
-                if (region.isEmpty() || date.isEmpty() ||  place.isEmpty() || content.isEmpty()){
-                    Toast.makeText(ScheduleAddActivity.this,"항목을 모두 입력하세요",Toast.LENGTH_SHORT).show();
+                if (region.isEmpty() || date.isEmpty() || place.isEmpty() || content.isEmpty()) {
+                    Toast.makeText(ScheduleAddActivity.this, "항목을 모두 입력하세요", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 // 쉼표로 문자열을 나누어 배열로 저장
-                String[] places = place.split(",");
-                String[] placesArray = new String[4];
+                String[] places = selectRegionId.split(",");
+                String[] placesArray = new String[places.length];  //places의 크기 만큼 배열
 
                 // 나머지 빈 공간에는 빈 문자열(" ") 할당
                 for (int i = 0; i < placesArray.length; i++) {
@@ -177,10 +177,13 @@ public class ScheduleAddActivity extends AppCompatActivity {
                     }
                 }
 
+                int[] intArray = convertToIntArray(placesArray);
+
                 // placesArray의 내용 출력
                 for (String value : placesArray) {
                     Log.i("AAA", value.trim()); // trim()을 사용하여 문자열 앞뒤의 공백 제거
                 }
+
                 Retrofit retrofit = NetworkClient.getRetrofitClient(ScheduleAddActivity.this);
                 ScheduleApi api = retrofit.create(ScheduleApi.class);
 
@@ -189,20 +192,20 @@ public class ScheduleAddActivity extends AppCompatActivity {
                 token = sp.getString("token", "");
                 token = "Bearer " + token;
 
-                Schedule schedule = new Schedule(region,dateString1,dateString2,content);
-                Call<Res> call =  api.addSchedule(token,schedule,placesArray[0],placesArray[1],placesArray[2],placesArray[3]);  //토큰,스케줄정보,장소값들
+                Schedule schedule = new Schedule(region, dateString1, dateString2, content, intArray);
+                Call<Res> call = api.addSchedule(token, schedule);  //토큰,스케줄정보,장소값들
                 call.enqueue(new Callback<Res>() {
                     @Override
                     public void onResponse(Call<Res> call, Response<Res> response) {
-                        if(response.isSuccessful()){
-                            Toast.makeText(ScheduleAddActivity.this,"일정 저장 완료.",Toast.LENGTH_SHORT).show();
+                        if (response.isSuccessful()) {
+                            Toast.makeText(ScheduleAddActivity.this, "일정 저장 완료.", Toast.LENGTH_SHORT).show();
                             finish();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<Res> call, Throwable t) {
-                        Log.i("AAA","에러");
+                        Log.i("AAA", "에러");
                     }
                 });
             }
@@ -218,9 +221,11 @@ public class ScheduleAddActivity extends AppCompatActivity {
                     new ActivityResultCallback<ActivityResult>() {
                         @Override
                         public void onActivityResult(ActivityResult o) {
-                            if(o.getResultCode() == 100){
+                            if (o.getResultCode() == 100) {
                                 String selectRegion = o.getData().getStringExtra("selectRegion");
+                                selectRegionId = o.getData().getStringExtra("selectRegionId");
                                 txtPlace.setText(selectRegion);
+                                Log.i("AAA","전달 받은 장소 ID " +selectRegionId );
                             }
                         }
                     });
@@ -230,6 +235,17 @@ public class ScheduleAddActivity extends AppCompatActivity {
         super.onResume();
     }
 
+    // 문자열 배열을 정수 배열로 변환하는 함수
+    public static int[] convertToIntArray(String[] stringArray) {
+        int length = stringArray.length;
+        int[] intArray = new int[length];
 
+        for (int i = 0; i < length; i++) {
+            // Integer.parseInt를 사용하여 문자열을 정수로 변환
+            intArray[i] = Integer.parseInt(stringArray[i]);
+        }
+
+        return intArray;
+    }
 }
 

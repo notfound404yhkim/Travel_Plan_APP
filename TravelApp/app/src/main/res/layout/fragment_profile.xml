@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/frameLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="50dp"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
@@ -16,7 +14,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:padding="10dp">
 
         <ImageView
             android:id="@+id/imgPhoto"
@@ -27,19 +26,21 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginBottom="-20dp"
             android:orientation="vertical">
 
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profile_image_view"
                 android:layout_width="140dp"
                 android:layout_height="140dp"
                 android:layout_gravity="center"
-
                 android:layout_marginTop="100dp"
-                android:scaleType="centerCrop"
                 android:src="@drawable/person_icon"
-                tools:layout_editor_absoluteX="126dp"
-                tools:layout_editor_absoluteY="30dp" />
+                android:layout_marginStart="115dp"
+                android:layout_marginEnd="116dp"
+                android:layout_marginBottom="20dp"
+                android:scaleType="centerCrop"
+                />
 
             <TextView
                 android:id="@+id/txtName"
@@ -52,13 +53,15 @@
 
             <Button
                 android:id="@+id/btnMyposting"
-                android:layout_width="match_parent"
+                android:layout_width="180dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:layout_marginEnd="116dp"
+                android:layout_gravity="center"
                 android:layout_marginStart="115dp"
                 android:layout_marginTop="10dp"
+                android:layout_marginEnd="116dp"
+                android:layout_marginBottom="20dp"
                 android:backgroundTint="@color/my_blue3"
+                android:gravity="center"
                 android:text="내 기록"
                 android:textColor="@color/white"
                 android:textSize="15sp"
@@ -66,12 +69,14 @@
 
             <Button
                 android:id="@+id/btnMyschedule"
-                android:layout_width="match_parent"
+                android:layout_width="180dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:layout_marginEnd="116dp"
+                android:layout_gravity="center"
                 android:layout_marginStart="116dp"
+                android:layout_marginEnd="116dp"
+                android:layout_marginBottom="20dp"
                 android:backgroundTint="#FF0874E8"
+                android:gravity="center"
                 android:text="내 일정"
                 android:textColor="@color/white"
                 android:textSize="15sp"
@@ -79,12 +84,14 @@
 
             <Button
                 android:id="@+id/btnBookmark"
-                android:layout_width="match_parent"
+                android:layout_width="180dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:layout_marginEnd="116dp"
+                android:layout_gravity="center"
                 android:layout_marginStart="116dp"
+                android:layout_marginEnd="116dp"
+                android:layout_marginBottom="20dp"
                 android:backgroundTint="#FF0874E8"
+                android:gravity="center"
                 android:text="관심 등록 글"
                 android:textColor="@color/white"
                 android:textSize="15sp"
@@ -92,11 +99,13 @@
 
             <Button
                 android:id="@+id/btnAIHistory"
-                android:layout_width="match_parent"
+                android:layout_width="180dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="116dp"
+                android:layout_gravity="center"
                 android:layout_marginStart="115dp"
+                android:layout_marginEnd="116dp"
                 android:backgroundTint="#FF0874E8"
+                android:gravity="center"
                 android:text="AI 추천 기록"
                 android:textColor="@color/white"
                 android:textSize="15sp"

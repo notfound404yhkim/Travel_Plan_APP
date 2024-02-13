@@ -4,8 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:layout_marginBottom="10dp"
+    android:backgroundTint="#EFE3F6"
+    android:orientation="vertical"
     android:weightSum="100">
 
     <ScrollView
@@ -17,17 +18,22 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="#F3ECF8"
+            android:backgroundTint="#F3ECF8"
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/top"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="60dp"
                 android:layout_margin="10dp"
+                android:background="@drawable/top_image2"
                 android:gravity="center">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:visibility="invisible">
 
                     <ImageView
                         android:layout_width="50dp"
@@ -50,7 +56,8 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="15dp">
+                    android:layout_marginStart="15dp"
+                    android:visibility="invisible">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -76,7 +83,8 @@
                     android:layout_marginRight="10dp"
                     android:layout_weight="1"
                     android:backgroundTint="#FF0874E8"
-                    android:text="AI 추천" />
+                    android:text="AI 추천"
+                    android:textSize="18sp" />
 
                 <Button
                     android:id="@+id/btnP2"
@@ -85,7 +93,8 @@
                     android:layout_marginRight="10dp"
                     android:layout_weight="1"
                     android:backgroundTint="#FF0874E8"
-                    android:text="핫플 콕콕" />
+                    android:text="핫플 콕콕"
+                    android:textSize="18sp" />
 
             </LinearLayout>
 
@@ -211,7 +220,7 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recyclerView"
                         android:layout_width="match_parent"
-                        android:layout_height="320dp"
+                        android:layout_height="340dp"
                         android:orientation="horizontal" />
 
                 </LinearLayout>
@@ -223,10 +232,10 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="15dp"
-                        android:layout_marginEnd="15dp"
                         android:layout_marginStart="15dp"
                         android:layout_marginTop="15dp"
+                        android:layout_marginEnd="15dp"
+                        android:layout_marginBottom="15dp"
                         android:text="축제 및 행사 리스트"
                         android:textColor="#0E5DE4"
                         android:textSize="20dp"
@@ -248,11 +257,13 @@
                 <ViewFlipper
                     android:id="@+id/viewFlipper"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="260dp"
+                    android:layout_gravity="center"
                     android:autoStart="true"
                     android:flipInterval="2000"
                     android:inAnimation="@android:anim/slide_in_left"
-                    android:outAnimation="@android:anim/slide_out_right" />
+                    android:outAnimation="@android:anim/slide_out_right"
+                    android:scaleType="centerCrop" />
 
             </LinearLayout>
 

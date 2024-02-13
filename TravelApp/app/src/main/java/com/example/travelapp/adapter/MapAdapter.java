@@ -84,6 +84,7 @@ public class MapAdapter extends RecyclerView.Adapter<MapAdapter.ViewHolder> {
                         Map selectedMap = mapArrayList.get(position);
                         itemClickListener.onMapItemClick(selectedMap.geometry.location.lat, selectedMap.geometry.location.lng);
                     }
+
                 }
             });
         }

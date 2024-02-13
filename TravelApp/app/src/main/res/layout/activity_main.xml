@@ -10,9 +10,9 @@
         android:id="@+id/Main_toolbar"
         android:layout_width="match_parent"
         android:layout_height="60dp"
+        android:background="@drawable/banner"
         android:padding="10dp"
-        android:visibility="visible"
-        android:background="@drawable/banner">
+        android:visibility="visible">
 
         <ImageView
             android:id="@+id/imgLogout"

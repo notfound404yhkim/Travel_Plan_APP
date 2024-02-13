@@ -39,7 +39,7 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.9.0")
     implementation("com.squareup.picasso:picasso:2.71828")
-
+    implementation("androidx.core:core-ktx:1.7.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.11.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
@@ -50,9 +50,13 @@ dependencies {
     implementation("com.google.android.gms:play-services-location:21.1.0")
     implementation("com.google.android.gms:play-services-places:17.0.0")
     implementation("com.google.android.libraries.places:places:3.3.0")
-
+    implementation("de.hdodenhof:circleimageview:3.1.0")
     // Glide
     implementation("com.github.bumptech.glide:glide:4.16.0")
     // 카메라
     implementation("commons-io:commons-io:2.4")
+
+    // Google 로그인
+    implementation("com.google.gms:google-services:4.3.15")
+    implementation("com.google.android.gms:play-services-auth:20.5.0")
 }

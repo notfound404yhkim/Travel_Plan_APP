@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.core.util.Pair;
 
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -155,7 +156,7 @@ public class MainFragment extends Fragment {
                 if(dateString1 == null || dateString2 == null){
                     Toast.makeText(getActivity(), "날짜를 선택하세요", Toast.LENGTH_SHORT).show();
                     return;}
-                showProgress();
+                showCustomProgress();
                 Retrofit retrofit = NetworkClient.getRetrofitClient(getActivity());
                 HistoryApi api = retrofit.create(HistoryApi.class);
                 // 토큰 가져온다.
@@ -248,6 +249,7 @@ public class MainFragment extends Fragment {
     }
 
     public void previewfestival(){
+        showProgress();
 
         Random random = new Random();
         int randomIndex = random.nextInt(region.length);
@@ -271,12 +273,6 @@ public class MainFragment extends Fragment {
 
                     imageViews = new ImageView[placeArrayList.size()];
                     viewFlipper.removeAllViews();
-
-                    try {
-                        Thread.sleep(500);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
 
                     //사이즈만큼 반복분 이미지 뷰를 생성 .
                     for (int i = 0; i < placeArrayList.size(); i++) {
@@ -305,6 +301,7 @@ public class MainFragment extends Fragment {
                         i = i+1;
                     }
                 }
+                dismissProgress();
             }
             @Override
             public void onFailure(Call<PlaceList> call, Throwable t) {
@@ -334,5 +331,62 @@ public class MainFragment extends Fragment {
     }
     private void dismissProgress(){
         dialog.dismiss();
+    }
+    private ProgressBar progressBar;
+    private TextView txtProgress;
+
+    private void showCustomProgress(){
+        dismissProgress();
+
+        dialog = new Dialog(getActivity());
+        dialog.setContentView(R.layout.custom_progress_dialog);
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+
+        progressBar = dialog.findViewById(R.id.progressBarCustom);
+        txtProgress = dialog.findViewById(R.id.text_progress);
+
+        progressBar.setProgress(0);
+
+        dialog.show();
+
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                // 퍼센트 텍스트 업데이트 (예: "Loading... 0%")
+                txtProgress.setText("Loading... 0%");
+
+                // 백그라운드 스레드 시작
+                new Thread(new Runnable() {
+                    public void run() {
+                        int progress = 0;
+                        while (progress < 100) {
+                            progress++; // 프로그래스 바 증가
+                            final int finalProgress = progress;
+                            // UI 스레드에서 UI 업데이트 예약
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    progressBar.setProgress(finalProgress);
+                                    // 퍼센트 텍스트 업데이트 (예: "Loading... 50%")
+                                    txtProgress.setText("Loading... " + finalProgress + "%");
+                                }
+                            });
+                            try {
+                                // 100 밀리초마다 업데이트
+                                Thread.sleep(70);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        // 작업 완료 후 다이얼로그 닫기
+//                        dismissProgress();
+                    }
+                }).start();
+            }
+        });
+
+
     }
 }

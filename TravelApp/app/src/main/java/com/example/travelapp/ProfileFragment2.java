@@ -48,6 +48,7 @@ import com.example.travelapp.config.Config;
 import com.example.travelapp.model.Res;
 import com.example.travelapp.model.User;
 import com.example.travelapp.model.UserRes;
+import com.google.android.material.snackbar.Snackbar;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -96,6 +97,19 @@ public class ProfileFragment2 extends Fragment {
         txtEmail = view.findViewById(R.id.txtEmail);
 
         btnCancel = view.findViewById(R.id.btnCancel);
+
+        SharedPreferences sp = getActivity().getSharedPreferences(Config.PREFERENCE_NAME, MODE_PRIVATE);
+        int type = sp.getInt("type", -1);
+
+        if (type == 1){
+            EditName.setEnabled(false);
+            txtEmail.setEnabled(false);
+            EditName.setBackgroundColor(Color.GRAY);
+            txtEmail.setBackgroundColor(Color.GRAY);
+            EditName.setTextColor(Color.DKGRAY);
+            txtEmail.setTextColor(Color.DKGRAY);
+        }
+
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -155,6 +169,15 @@ public class ProfileFragment2 extends Fragment {
 
                         if (response.isSuccessful()){
                             Toast.makeText(getActivity(),"프로필 정보가 수정되었습니다.",Toast.LENGTH_SHORT).show();
+
+                            ProfileFragment secondFragment = new ProfileFragment();
+                            //                               // Fragment 에서 다른 Fragment로 이동 .
+                            if (getActivity() != null) {
+                                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                                fragmentTransaction.replace(R.id.main_frame_layout,secondFragment);
+                                fragmentTransaction.commit();
+                            }
+
 
                         }
                     }

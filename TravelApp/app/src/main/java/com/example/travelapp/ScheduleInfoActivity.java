@@ -64,7 +64,6 @@ public class ScheduleInfoActivity extends AppCompatActivity {
                     imageViews = new ImageView[ScheduleArrayList.size()];
                     int i = 0;
                     for (Place item : ScheduleArrayList) {
-                        Log.i("AAA",item.name);
                         Log.i("AAA",item.imgUrl);
                         imageViews[i] = new ImageView(ScheduleInfoActivity.this);
                         viewFlipper.addView(imageViews[i]);

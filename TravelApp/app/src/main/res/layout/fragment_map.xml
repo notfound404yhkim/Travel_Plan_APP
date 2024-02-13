@@ -8,50 +8,82 @@
     tools:context=".MapFragment">
 
 
-    <fragment
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment" />
+        android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/Map_root"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center|top"
-        android:orientation="vertical">
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
         <LinearLayout
+            android:id="@+id/Map_root"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center|top"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:gravity="center|top"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/my_locationBtn"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="5dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/my_location_icon" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/edit_text_rounded_corner_stroke_blue">
+
+                    <EditText
+                        android:id="@+id/autoComplete"
+                        android:layout_width="250dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:singleLine="true" />
+
+                    <Button
+                        android:id="@+id/mapBtn"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:background="@drawable/search_icon" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/MapRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="300dp" />
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/edit_text_rounded_corner_stroke_blue"
-            android:layout_marginTop="10dp">
-            <EditText
-                android:id="@+id/autoComplete"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"/>
-            <Button
-                android:id="@+id/mapBtn"
-
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:background="@drawable/search_icon"/>
-
-        </LinearLayout>
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/MapRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="70dp"
-            />
-    </LinearLayout>
-
-
-
-
-
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

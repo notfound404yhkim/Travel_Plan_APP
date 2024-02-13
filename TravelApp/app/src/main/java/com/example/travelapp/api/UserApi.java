@@ -24,6 +24,10 @@ public interface UserApi {
     @POST("/user/register")
     Call<UserRes> register(@Body User user); //받는 것 return , 보내는 것 : 파라미터
 
+    // 구글 로그인 정보로 회원가입 API
+    @POST("/user/googleRegister")
+    Call<UserRes> googleRegister(@Body User user);
+
     //로그인 API
     @POST("/user/login")
     Call<UserRes> login (@Body User user);
@@ -37,7 +41,6 @@ public interface UserApi {
     Call<UserRes> getProfile(@Header("Authorization") String token);
 
     //프로필 정보 변경
-
     @Multipart
     @PUT("mypage/userInfo")
     Call<Res> EditProfile(@Header("Authorization") String token,

@@ -204,6 +204,11 @@ public class CommunityThreeFragment extends Fragment {
                             imgPhoto.setImageResource(R.drawable.add_photo);
                             editTitle.setText("");
                             editContent.setText("");
+
+                            CommunityFragment communityFragment = new CommunityFragment();
+                            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                            fragmentTransaction.replace(R.id.main_frame_layout, communityFragment);
+                            fragmentTransaction.commit();
                             return;
                         }
                     }

@@ -27,11 +27,7 @@ public interface ScheduleApi {
     //Body값은 class
 
     @POST("mypage/mySchedule")
-    Call<Res> addSchedule(@Header("Authorization") String token, @Body Schedule schedule,
-                          @Query("place") String place0,
-                          @Query("place") String place1,
-                          @Query("place") String place2,
-                          @Query("place") String place3);
+    Call<Res> addSchedule(@Header("Authorization") String token, @Body Schedule schedule);
 
 
 

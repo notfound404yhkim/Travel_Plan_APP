@@ -1,7 +1,10 @@
 package com.example.travelapp.adapter;
 
 import android.content.Context;
-import android.content.Intent;
+
+import android.graphics.drawable.Drawable;
+import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,17 +27,30 @@ public class SchedulePlaceSelectAdapter extends RecyclerView.Adapter<SchedulePla
 
     Context context;
     ArrayList<Place> placeArrayList = new ArrayList<>();
+    private SparseBooleanArray clickedItems; // 클릭한 상태를 저장하는 배열
+
 
     //액티비티로 전달하기 위해서 클릭리스너 정의
     private View.OnClickListener onClickListener;
+    private CardClickListener cardClickListener;
 
     public void setOnItemClickListener(View.OnClickListener listener) {
         this.onClickListener = listener;
+    }
+    public interface CardClickListener {
+        void onCardClick(int position);
     }
 
     public SchedulePlaceSelectAdapter(Context context, ArrayList<Place> placeArrayList) {
         this.context = context;
         this.placeArrayList = placeArrayList;
+    }
+
+    public SchedulePlaceSelectAdapter(ArrayList<Place> placeArrayList,CardClickListener cardClickListener,Context context) {
+        this.placeArrayList = placeArrayList;
+        this.cardClickListener = cardClickListener;
+        this.context = context;
+        this.clickedItems = new SparseBooleanArray();
     }
 
     @NonNull
@@ -52,11 +68,21 @@ public class SchedulePlaceSelectAdapter extends RecyclerView.Adapter<SchedulePla
         Place place = placeArrayList.get(position);
         holder.txtPlaceName.setText(place.placeName);
         Picasso.get().load(place.imgUrl).into( holder.imgPhoto);
-        final Place item = placeArrayList.get(position);
-        //이벤트 리스너 생성
-        holder.cardView.setOnClickListener(onClickListener);
-        holder.cardView.setTag(item);
 
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (clickedItems.get(position, false)) {
+                    // 이미 클릭한 상태일 때
+                    holder.imageView.setImageResource(R.drawable.image_uncheck);
+                } else {
+                    // 처음 또는 클릭을 해제한 상태일 때
+                    holder.imageView.setImageResource(R.drawable.image_check);
+                }
+                clickedItems.put(position, !clickedItems.get(position, false));
+                cardClickListener.onCardClick(position);
+            }
+        });
     }
 
     @Override
@@ -74,12 +100,15 @@ public class SchedulePlaceSelectAdapter extends RecyclerView.Adapter<SchedulePla
 
         CardView cardView;
 
+        ImageView imageView;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             txtPlaceName = itemView.findViewById(R.id.txtPlaceName);
             imgPhoto = itemView.findViewById(R.id.imgPhoto);
             cardView = itemView.findViewById(R.id.cardView);
+            imageView = itemView.findViewById(R.id.imageView);
         }
     }
 }

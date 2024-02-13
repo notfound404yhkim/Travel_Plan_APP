@@ -46,7 +46,7 @@ public class PlaceAdapter2 extends RecyclerView.Adapter<PlaceAdapter2.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Place place = placeArrayList.get(position);
-        holder.txtRegion.setText(place.region);
+        holder.txtRegion.setText("<" + place.region + ">");
         holder.txtName.setText(place.placeName);
 //        holder.txtDate.setText(place.strDate +" ~ " + place.endDate);
         Picasso.get().load(place.imgUrl).into( holder.imgPhoto);

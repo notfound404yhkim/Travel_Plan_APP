@@ -25,8 +25,11 @@ import com.example.travelapp.api.UserApi;
 import com.example.travelapp.config.Config;
 import com.example.travelapp.model.User;
 import com.example.travelapp.model.UserRes;
+import com.google.android.material.snackbar.Snackbar;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -38,7 +41,8 @@ public class ProfileFragment extends Fragment {
     String token,profileurl;
 
     TextView txtName;
-    ImageView profile_image_view;
+
+    CircleImageView profile_image_view;
 
     Button btnMyposting, btnMyschedule, btnAIHistory,btnBookmark;
 
@@ -101,6 +105,7 @@ public class ProfileFragment extends Fragment {
         });
 
         btnBookmark = view.findViewById(R.id.btnBookmark);
+
         btnBookmark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -143,7 +148,7 @@ public class ProfileFragment extends Fragment {
         call.enqueue(new Callback<UserRes>() {
             @Override
             public void onResponse(Call<UserRes> call, Response<UserRes> response) {
-
+                dismissProgress();
 
                 if(response.isSuccessful()){
 
@@ -154,11 +159,6 @@ public class ProfileFragment extends Fragment {
 
                     userArrayList.clear();
                     userArrayList.addAll( userList.items );
-                    try {
-                        Thread.sleep(500);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
 
                     for (User item : userArrayList) {
                         Log.i("AAA",item.name);
@@ -169,11 +169,8 @@ public class ProfileFragment extends Fragment {
                             Picasso.get().load(item.profileImg).into( profile_image_view);
                         }
                     }
-                    dismissProgress();
-                }else{
 
                 }
-
             }
 
             @Override
@@ -200,8 +197,10 @@ public class ProfileFragment extends Fragment {
 
 
     private void showAlertDialog(){
+        SharedPreferences sp = getActivity().getSharedPreferences(Config.PREFERENCE_NAME, MODE_PRIVATE);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-// 이 다이얼 로그의 외곽부분을 눌렀을때, 사라지지 않도록 하는 코드.
+        // 이 다이얼 로그의 외곽부분을 눌렀을때, 사라지지 않도록 하는 코드.
         builder.setCancelable(false);
         builder.setTitle("프로필 변경");
         builder.setMessage("프로필 변경 화면으로 이동할까요?");

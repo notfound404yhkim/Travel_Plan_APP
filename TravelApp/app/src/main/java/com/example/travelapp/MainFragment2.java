@@ -203,9 +203,7 @@ public class MainFragment2 extends Fragment implements View.OnClickListener {
 
     // 앱 처음 실행시 랜덤 축제 이미지 4개 가져오기
     public void previewfestival(String region){
-
-
-
+        showProgress();
         Retrofit retrofit = NetworkClient.getRetrofitClient(getActivity());
         PlaceApi api = retrofit.create(PlaceApi.class);
         Call<PlaceList> call = api.getImg(region, 1, 0,25);
@@ -215,6 +213,7 @@ public class MainFragment2 extends Fragment implements View.OnClickListener {
 
 
                 if(response.isSuccessful()){
+
                     placeArrayList2.clear(); // 리스트 초기화
 
                     PlaceList placeList = response.body();
@@ -257,6 +256,7 @@ public class MainFragment2 extends Fragment implements View.OnClickListener {
                         i = i+1;
                     }
                 }
+                dismissProgress();
             }
             @Override
             public void onFailure(Call<PlaceList> call, Throwable t) {

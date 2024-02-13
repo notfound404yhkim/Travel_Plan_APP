@@ -51,7 +51,7 @@
                         android:layout_width="100dp"
                         android:layout_height="100dp"
                         android:layout_weight="3"
-                        android:src="@drawable/image_check" />
+                        android:src="@drawable/image_uncheck" />
 
                 </LinearLayout>
 

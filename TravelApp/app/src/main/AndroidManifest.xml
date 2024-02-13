@@ -44,7 +44,6 @@
         <activity
             android:name=".BookMarkDetailActivity"
             android:exported="false" />
-
         <activity
             android:name=".BookmarkActivity"
             android:exported="false" />
@@ -74,9 +73,6 @@
             android:exported="false" />
         <activity
             android:name=".PlaceActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ListActivity"
             android:exported="false" />
         <activity
             android:name=".RegisterActivity"
