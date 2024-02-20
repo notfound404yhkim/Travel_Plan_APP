@@ -1,5 +1,7 @@
 package com.example.travelapp;
 
+import static androidx.core.location.LocationManagerCompat.requestLocationUpdates;
+
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +11,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -24,6 +27,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -82,6 +87,9 @@ public class MapFragment extends Fragment implements MapItemClickListener {
     private int mapInitRetryCount = 0;
     private static final int MAX_MAP_INIT_RETRY = 3; // 최대 재시도 횟수
 
+    final int MAX_RETRY_COUNT = 5; // 최대 재시도 횟수
+    int retryCount = 0; // 재시도 횟수
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,16 +98,12 @@ public class MapFragment extends Fragment implements MapItemClickListener {
 
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
-        // 권한 허용하는 코드
-        if (ActivityCompat.checkSelfPermission(getActivity(),
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
-                ActivityCompat.checkSelfPermission(getActivity(),
-                        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
-                            Manifest.permission.ACCESS_COARSE_LOCATION}, 100);
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // 권한 요청
+            requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
         } else {
-            // 위치 권한이 이미 허용된 경우
+            // 이미 권한이 허용된 경우
             getLocationUpdates();
         }
     }
@@ -213,20 +217,20 @@ public class MapFragment extends Fragment implements MapItemClickListener {
 
 
     // 위치 권한 요청 결과 처리
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 100) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // 위치 권한이 허용된 경우
-                getLocationUpdates();
-            } else {
-                // 위치 권한이 거부된 경우
-                Toast.makeText(getActivity(), "위치 권한 요청이 거부되었습니다.", Toast.LENGTH_SHORT).show();
-            }
-            getNetworkData();
-        }
-    }
+    private final ActivityResultLauncher<String> requestPermissionLauncher = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(),
+            isGranted -> {
+                if (isGranted) {
+                    // 위치 권한이 허용된 경우
+                    Log.i("AAA", "여기가 처음");
+                    getLocationUpdates();
+                } else {
+                    // 위치 권한이 거부된 경우
+                    Toast.makeText(getActivity(), "위치 권한 요청이 거부되었습니다.", Toast.LENGTH_SHORT).show();
+                }
+                getNetworkData();
+            });
+
 
     private void getNetworkData() {
 
@@ -311,6 +315,7 @@ public class MapFragment extends Fragment implements MapItemClickListener {
     }
 
     private void getLocationUpdates() {
+        Log.i("AAA","첫허용");
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(@NonNull Location location) {
@@ -318,6 +323,8 @@ public class MapFragment extends Fragment implements MapItemClickListener {
                 lng = location.getLongitude();
                 Log.i("AAA",lat+"lat");
                 Log.i("AAA",lng+"lng");
+                //재시도 횟수 초기화
+                retryCount = 0;
                 if (googleMap != null) {
                     LatLng myLocation = new LatLng(lat, lng);
                     Log.i("AAA", myLocation.toString());
@@ -331,6 +338,11 @@ public class MapFragment extends Fragment implements MapItemClickListener {
                 }
             }
         };
+        requestLocationUpdates();
+    }
+
+    private void requestLocationUpdates() {
+        Log.i("AAA",retryCount+"번째");
         // 위치 권한 체크
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -340,8 +352,8 @@ public class MapFragment extends Fragment implements MapItemClickListener {
         // 권한이 허용된 경우 위치 업데이트 요청
         locationManager.requestLocationUpdates(
                 LocationManager.GPS_PROVIDER,
-                3000,
-                -1,
+                3000, // 위치 업데이트 간격 (3초)
+                -1,   // 위치 업데이트 최소 거리 변경 (미사용)
                 locationListener
         );
         // NETWORK_PROVIDER를 사용하여 위치 업데이트 요청
@@ -351,8 +363,18 @@ public class MapFragment extends Fragment implements MapItemClickListener {
                 -1,   // 위치 업데이트 최소 거리 변경 (미사용)
                 locationListener
         );
-    }
 
+        // 타이머를 설정하여 일정 시간 후에 위치 업데이트 재시도
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (retryCount < MAX_RETRY_COUNT) {
+                    retryCount++;
+                    requestLocationUpdates(); // 위치 업데이트 요청 다시 시도
+                }
+            }
+        }, 10000); // 30초 후에 재시도
+    }
 
 
     public void moveToLocation(double lat, double lng) {

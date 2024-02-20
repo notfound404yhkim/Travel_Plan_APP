@@ -66,6 +66,8 @@ public class LoginActivity extends AppCompatActivity {
     String firstName = "";
     String googleEmail = "";
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +80,7 @@ public class LoginActivity extends AppCompatActivity {
 
         imgView = findViewById(R.id.imgView);
         googleLoginBtn = findViewById(R.id.googleLoginBtn);
+
 
 //        progressBar.setVisibility(View.GONE);
 

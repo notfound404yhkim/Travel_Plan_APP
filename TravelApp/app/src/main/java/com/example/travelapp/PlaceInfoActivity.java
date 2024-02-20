@@ -91,7 +91,7 @@ public class PlaceInfoActivity extends AppCompatActivity  {
                     if (diffX > 0) {
                         // 스와이프 우측
                         if (id == nextIndex[0]) {
-                            Toast.makeText(PlaceInfoActivity.this, "제일 마지막 페이지 입니다.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(PlaceInfoActivity.this, "마지막 페이지 입니다.", Toast.LENGTH_SHORT).show();
                             return false;
                         }
                         Intent intent = new Intent(PlaceInfoActivity.this, PlaceInfoActivity.class);
@@ -103,7 +103,7 @@ public class PlaceInfoActivity extends AppCompatActivity  {
                     } else {
                         // 스와이프 좌측
                         if (id == nextIndex[1]) {
-                            Toast.makeText(PlaceInfoActivity.this, "제일 마지막 페이지 입니다.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(PlaceInfoActivity.this, "마지막 페이지 입니다.", Toast.LENGTH_SHORT).show();
                             return false;
                         }
                         Intent intent = new Intent(PlaceInfoActivity.this, PlaceInfoActivity.class);

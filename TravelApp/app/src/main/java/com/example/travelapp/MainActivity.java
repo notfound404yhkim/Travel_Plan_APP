@@ -104,6 +104,18 @@ public class MainActivity extends AppCompatActivity {
 
         // 구글 로그인 유저가 로그아웃할 때
         if (type == 1){
+
+            if (mGoogleSignInClient == null) {
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putString("token", "");
+                editor.putInt("type", 0);
+                editor.apply();
+
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
+
             mGoogleSignInClient.signOut().addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {

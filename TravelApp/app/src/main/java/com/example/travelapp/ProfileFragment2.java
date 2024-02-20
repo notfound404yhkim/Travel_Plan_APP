@@ -529,9 +529,7 @@ public class ProfileFragment2 extends Fragment {
             displayFileChoose();
         }else{
             requestPermission();
-            Intent intent= new Intent(Intent.ACTION_PICK);
-            intent.setType("image/*");
-            startActivityForResult(intent,20);
+            displayFileChoose2();
         }
     }
 
@@ -579,6 +577,14 @@ public class ProfileFragment2 extends Fragment {
         i.setType("image/*");
         i.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(i, "SELECT IMAGE"), 300);
+    }
+
+
+
+    private void displayFileChoose2(){
+        Intent intent= new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        startActivityForResult(intent,20);
     }
 
     //앨범에서 선택한 사진이름 가져오기
